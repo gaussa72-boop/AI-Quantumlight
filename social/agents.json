@@ -1,0 +1,1 @@
+{"project":"AI-Quantumlight","agents":[{"id":"quantumlight","name":"Quantumlight Agent","topic":"quantum-light"},{"id":"assistant","name":"Quantumlight Assistant","topic":"general"},{"id":"bot","name":"Quantumlight Bot","topic":"quantum"}],"social_layer":"Quantum.K/social"}
