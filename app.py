@@ -29,6 +29,7 @@ app.secret_key = secret_key
 
 api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key) if api_key else None
+router_client = OpenAI(api_key=OPENROUTER_API_KEY, base_url="https://openrouter.ai/api/v1") if OPENROUTER_API_KEY else None
 
 
 def ultra_transform(text: str) -> str:
@@ -65,7 +66,7 @@ def health():
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json(silent=True) or {}
-    user_msg = (data.get("message") or "").strip()
+    user_msg = (data.get("message") or "").strip()\n    selected_model = (data.get("model") or MODEL).strip()
     assistant_name = (data.get("assistant") or "Quantumlight").strip()
 
     if not user_msg:
@@ -73,12 +74,12 @@ def chat():
 
     encrypted_preview = ultra_transform(user_msg)
 
-    if client is None:
+    active_client = router_client if (router_client and selected_model) else client\n    if active_client is None:
         reply = "OpenAI ist noch nicht konfiguriert. Setze OPENAI_API_KEY in der Umgebung."
     else:
         try:
-            response = client.chat.completions.create(
-                model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+            response = active_client.chat.completions.create(
+                model=os.getenv("OPENAI_MODEL", "openai/gpt-5.6-luna"),
                 messages=[
                     {"role": "system", "content": f"Du bist {assistant_name}, eine hochentwickelte KI in einem Dark-Sci-Fi-Universum."},
                     {"role": "user", "content": user_msg},
