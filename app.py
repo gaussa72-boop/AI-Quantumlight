@@ -28,6 +28,8 @@ if not secret_key:
 app.secret_key = secret_key
 
 api_key = os.getenv("OPENAI_API_KEY")
+OPENROUTER_API_KEY=os.getenv("OPENROUTER_API_KEY","").strip()
+router_client=OpenAI(api_key=OPENROUTER_API_KEY,base_url="https://openrouter.ai/api/v1") if OPENROUTER_API_KEY else None
 client = OpenAI(api_key=api_key) if api_key else None
 router_client = OpenAI(api_key=OPENROUTER_API_KEY, base_url="https://openrouter.ai/api/v1") if OPENROUTER_API_KEY else None
 
@@ -66,7 +68,7 @@ def health():
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json(silent=True) or {}
-    user_msg = (data.get("message") or "").strip()\n    selected_model = (data.get("model") or MODEL).strip()
+    user_msg = (data.get("message") or "").strip()\n    selected_model = (data.get("model") or MODEL).strip()\n    selected_model = (data.get("model") or MODEL).strip()
     assistant_name = (data.get("assistant") or "Quantumlight").strip()
 
     if not user_msg:
