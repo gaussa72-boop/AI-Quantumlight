@@ -68,7 +68,8 @@ def health():
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json(silent=True) or {}
-    user_msg = (data.get("message") or "").strip()\n    selected_model = (data.get("model") or MODEL).strip()\n    selected_model = (data.get("model") or MODEL).strip()
+    user_msg = (data.get("message") or "").strip()
+    selected_model = (data.get("model") or os.getenv("OPENAI_MODEL", "openai/gpt-5.6-luna")).strip()
     assistant_name = (data.get("assistant") or "Quantumlight").strip()
 
     if not user_msg:
@@ -76,7 +77,8 @@ def chat():
 
     encrypted_preview = ultra_transform(user_msg)
 
-    active_client = router_client if (router_client and selected_model) else client\n    if active_client is None:
+    active_client = router_client if (router_client and selected_model) else client
+    if active_client is None:
         reply = "OpenAI ist noch nicht konfiguriert. Setze OPENAI_API_KEY in der Umgebung."
     else:
         try:
