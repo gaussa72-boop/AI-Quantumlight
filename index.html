@@ -81,13 +81,15 @@
             document.documentElement.style.setProperty('--glow', colors[index % colors.length]);
         }
 
+        function appendChatMessage(className, label, value) { const node=document.createElement('div'); node.className=className; node.textContent=label+': '+String(value ?? ''); const target=document.getElementById('messages'); target.appendChild(node); target.scrollTop=target.scrollHeight; }
+
         async function sendMessage() {
             const input = document.getElementById('userInput');
             const box = document.getElementById('messages');
             if (!input.value) return;
 
             const userText = input.value;
-            box.innerHTML += `<div class="msg-u">DU: ${userText}</div>`;
+            appendChatMessage('msg-u','DU',userText);
             input.value = '';
 
             try {
@@ -99,10 +101,10 @@
                 });
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
-                box.innerHTML += `<div class="msg-a">${activeAI.name}: ${data.reply}</div>`;
+                appendChatMessage('msg-a',activeAI.name,data.reply);
                 box.scrollTop = box.scrollHeight;
             } catch (e) {
-                box.innerHTML += `<div class="msg-a">SYSTEMFEHLER: Verbindung unterbrochen.</div>`;
+                appendChatMessage('msg-a','SYSTEMFEHLER','Verbindung unterbrochen.');
             }
         }
 
