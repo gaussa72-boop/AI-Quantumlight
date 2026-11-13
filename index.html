@@ -145,5 +145,9 @@ s.style.cssText='background:#15131f;color:#fff;border:1px solid #8b5cf6;border-r
 const host=document.querySelector('.top')||document.querySelector('.topbar')||document.querySelector('header')||document.querySelector('.ai-display');
 if(host)host.appendChild(s);
 try{const r=await fetch('/health',{cache:'no-store'});const c=await r.json();(c.models||[]).forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.label;s.appendChild(o)});if(!s.options.length){const o=document.createElement('option');o.value='';o.textContent='API-Key in Render konfigurieren';s.appendChild(o);s.disabled=true}}catch(e){const o=document.createElement('option');o.value='';o.textContent='Modellstatus nicht verfügbar';s.appendChild(o);s.disabled=true}
-})();</script></body>
+})();</script>
+<!-- ULTIMA Membership & Credits -->
+<script src="https://ultima-membership-api.onrender.com/membership-widget.js"></script>
+<script>(function(){var sites={"ai-quantumlight.onrender.com":["ai-quantumlight","AI Quantumlight"]};var entry=sites[location.hostname];if(entry&&window.UltimaMembership)window.UltimaMembership.init({siteSlug:entry[0],brand:entry[1]});})();</script>
+</body>
 </html>
