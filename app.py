@@ -104,7 +104,7 @@ def chat():
         return jsonify({"error": "Die KI-Schnittstelle ist fehlgeschlagen. Prüfe API-Key, Modellfreigabe, Guthaben und Render-Logs."}), 502
     with get_db() as conn:
         conn.execute("INSERT INTO chats (assistant, role, message, encrypted) VALUES (?, ?, ?, ?)", (assistant_name, "user", user_msg, encrypted_preview))
-    return jsonify({"reply": reply, "encryption": encrypted_preview, "model": model, "provider": provider}), 200
+    return jsonify({"reply": reply, "encoded_preview": encrypted_preview, "encoding_note": "Base64-Umkehrkodierung ist keine Verschlüsselung.", "model": model, "provider": provider}), 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")), debug=False)
