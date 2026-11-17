@@ -28,8 +28,10 @@ api_key = os.getenv("OPENAI_API_KEY", "").strip()
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "").strip()
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini").strip()
 OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "openai/gpt-4o-mini").strip()
-client = OpenAI(api_key=api_key) if api_key else None
-router_client = OpenAI(api_key=OPENROUTER_API_KEY, base_url="https://openrouter.ai/api/v1") if OPENROUTER_API_KEY else None
+AI_ENABLED = os.getenv("AI_ENABLED", "true").strip().lower() == "true"
+AI_PROVIDER = os.getenv("AI_PROVIDER", "auto").strip().lower()
+client = OpenAI(api_key=api_key, timeout=45, max_retries=1) if api_key else None
+router_client = OpenAI(api_key=OPENROUTER_API_KEY, base_url="https://openrouter.ai/api/v1", timeout=45, max_retries=1) if OPENROUTER_API_KEY else None
 
 
 def ultra_transform(text: str) -> str:
@@ -65,11 +67,13 @@ def health():
         models.append({"id": OPENAI_MODEL, "label": f"OpenAI · {OPENAI_MODEL}", "provider": "openai"})
     if router_client:
         models.append({"id": OPENROUTER_MODEL, "label": f"OpenRouter · {OPENROUTER_MODEL}", "provider": "openrouter"})
-    return jsonify({"status": "ok", "openai_configured": client is not None, "openrouter_configured": router_client is not None, "ai_configured": bool(models), "models": models})
+    return jsonify({"status": "ok", "openai_configured": client is not None, "openrouter_configured": router_client is not None, "ai_configured": bool(models) and AI_ENABLED, "ai_enabled": AI_ENABLED, "provider_preference": AI_PROVIDER, "models": models})
 
 
 @app.route("/chat", methods=["POST"])
 def chat():
+    if not AI_ENABLED:
+        return jsonify({"error": "Quantumlight ist derzeit deaktiviert (AI_ENABLED=false)."}), 503
     data = request.get_json(silent=True) or {}
     user_msg = str(data.get("message") or "").strip()
     assistant_name = str(data.get("assistant") or "Quantumlight").strip()[:60]
