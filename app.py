@@ -22,10 +22,7 @@ def _sec_before():
 @app.after_request
 def _sec_headers(response):
     response.headers.setdefault("X-Content-Type-Options","nosniff");response.headers.setdefault("X-Frame-Options","DENY");response.headers.setdefault("Referrer-Policy","strict-origin-when-cross-origin");response.headers.setdefault("Permissions-Policy","camera=(), microphone=(), geolocation=()");response.headers.setdefault("Cross-Origin-Opener-Policy","same-origin");response.headers.setdefault("Strict-Transport-Security","max-age=31536000; includeSubDomains");response.headers.pop("Server",None);return response
-secret_key = os.getenv("SECRET_KEY")
-if not secret_key:
-    raise RuntimeError("SECRET_KEY must be configured")
-app.secret_key = secret_key
+# No Flask session or signed-cookie feature is used in this service.
 
 api_key = os.getenv("OPENAI_API_KEY", "").strip()
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "").strip()
