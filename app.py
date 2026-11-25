@@ -12,6 +12,9 @@ app = Flask(__name__)
 from agent_bridge import register_agent_bridge
 register_agent_bridge(app, agent_id="quantumlight", display_name="AI Quantumlight", persona="Du verbindest wissenschaftliche Neugier, Licht- und Kreativkonzepte mit verständlichen, überprüfbaren Erklärungen.")
 
+from agent_bridge import register_agent_bridge
+register_agent_bridge(app, agent_id="quantumlight", display_name="AI Quantumlight", persona="Du verbindest wissenschaftliche Neugier, Licht- und Kreativkonzepte mit verständlichen, überprüfbaren Erklärungen.")
+
 # SECURITY HARDENING
 _SEC_RATE_LIMIT={}
 from time import monotonic
